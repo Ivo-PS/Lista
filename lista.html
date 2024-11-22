@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário com Título e Itens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            display: none; /* Inicialmente o formulário está escondido */
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-group input {
+            padding: 8px;
+            width: 70%;
+        }
+        .input-group button {
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .input-group button.delete {
+            background-color: #f44336;
+        }
+        .input-group button.add {
+            background-color: #008CBA;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group button {
+            background-color: #ff9800;
+        }
+        .item-list {
+            margin-top: 20px;
+        }
+        .item-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .item-list li {
+            background-color: #f1f1f1;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-list li button {
+            background-color: #f44336;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .item-list li button.complete {
+            background-color: #4CAF50;
+        }
+        .save-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .save-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .saved-titles {
+            margin-top: 40px;
+        }
+        .saved-titles h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .saved-titles ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .saved-titles li {
+            display: flex;
+			  text-align: left;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+			  border: 1px solid black;
+        }
+        .saved-titles li button {
+            padding: 5px 10px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .saved-titles li button.delete {
+            background-color: #f44336;
+			  padding:  10px;
+        }
+        .saved-titles li button.complete {
+            background-color: #4CAF50;
+        }
+        .search-input {
+            margin-top: 20px;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .completed-title {
+            text-decoration: line-through;
+            color: grey;
+        }
+        .add-title-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botão para Adicionar Título -->
+    <button class="add-title-button" id="addTitleButton" onclick="showForm()">Adicionar Título</button>
+
+    <!-- Lista de Títulos Salvos -->
+    <div class="saved-titles">
+        <h3>Títulos Salvos:</h3>
+        <input type="text" class="search-input" id="searchTitleInput" placeholder="Buscar títulos..." oninput="searchTitles()">
+        <ul id="savedTitlesList"></ul>
+    </div>
+
+    <!-- Formulário -->
+    <div class="form-container">
+        <form id="myForm">
+            <!-- Título -->
+            <div class="form-group">
+                <label for="title">Título:</label>
+                <div class="input-group">
+                    <input type="text" id="title" name="title" placeholder="Digite o título">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="checkbox">
+                        <button type="button" class="delete" onclick="deleteTitle()">Excluir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item -->
+            <div class="form-group">
+                <label for="item">Item:</label>
+                <div class="input-group">
+                    <input type="text" id="item" name="item" placeholder="Digite o item">
+                    <button type="button" class="add" onclick="addItem()">Adicionar</button>
+				   </div>
+            </div>
+        </form>
+
+		<!-- Botão Salvar -->
+        <button type="button" class="save-button" id="saveButton" onclick="saveItems()">Salvar</button>
+  		<!-- Botão Fechar-->
+        <button type="button" class="save-button" id="saveButton" onclick="fechaForm()">Fechar</button>
+  
+
+        <!-- Campo de Busca para Itens -->
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar itens..." oninput="searchItems()">
+
+        <!-- Lista de Itens -->
+        <div class="item-list">
+            <h3>Itens:</h3>
+            <ul id="itemList"></ul>
+        </div>
+
+     </div>
+
+    <script>
+        let selectedTitleIndex = null; // Indica o índice do título selecionado
+
+        // Função para mostrar o formulário
+        function showForm() {
+            document.querySelector('.form-container').style.display = 'block';
+            document.querySelector('.saved-titles').style.display = 'none';
+            document.getElementById('addTitleButton').classList.add('hidden'); // Esconde o botão "Adicionar Título"
+            document.body.style.backgroundColor = 'white'; // Altera o fundo para branco
+        }
+
+        // Função para excluir o título do formulário
+        function deleteTitle() {
+            document.getElementById('title').value = '';
+            document.getElementById('checkbox').checked = false;
+            document.getElementById('itemList').innerHTML = '';
+            selectedTitleIndex = null;
+            checkSaveButtonStatus();
+        }
+
+        // Função para adicionar um item
+        function addItem() {
+            const itemInput = document.getElementById('item');
+            const item = itemInput.value.trim();
+
+            if (item) {
+                const itemList = document.getElementById('itemList');
+
+                // Criar um novo item na lista
+                const li = document.createElement('li');
+                li.textContent = item;
+
+                // Criar o botão de concluir para o item
+                const completeButton = document.createElement('button');
+                completeButton.textContent = 'Concluir';
+                completeButton.onclick = function () {
+                    const isCompleted = li.getAttribute('data-completed') === 'true';
+                    if (isCompleted) {
+                        li.style.textDecoration = '';
+                        li.removeAttribute('data-completed');
+                    } else {
+                        li.style.textDecoration = 'line-through';
+                        li.setAttribute('data-completed', 'true');
+                    }
+                    checkSaveButtonStatus();
+                };
+
+                // Criar o botão de excluir para o item
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.onclick = function () {
+                    li.remove();
+                    checkSaveButtonStatus();
+                };
+
+                li.appendChild(completeButton);
+                li.appendChild(deleteButton);
+                itemList.appendChild(li);
+
+                itemInput.value = '';
+                checkSaveButtonStatus();
+            } else {
+                alert('Por favor, insira um item.');
+            }
+        }
+
+        // Função para salvar os itens no localStorage
+        function saveItems() {
+            const titleInput = document.getElementById('title');
+            const title = titleInput.value.trim();
+            const itemList = document.getElementById('itemList');
+            const items = [];
+            const isTitleCompleted = document.getElementById('checkbox').checked;
+
+            for (let item of itemList.children) {
+                const itemText = item.firstChild.textContent;
+                const isCompleted = item.getAttribute('data-completed') === 'true';
+                items.push({ text: itemText, completed: isCompleted });
+            }
+
+            if (items.length > 0) {
+                let savedTitles = JSON.parse(localStorage.getItem('savedTitles')) || [];
+
+                if (selectedTitleIndex !== null) {
+                    savedTitles[selectedTitleIndex] = { title, items, completed: isTitleCompleted };
+                } else {
+                    savedTitles.push({ title, items, completed: isTitleCompleted });
+                }
+
+                localStorage.setItem('savedTitles', JSON.stringify(savedTitles));
+                titleInput.value = '';
+                document.getElementById('checkbox').checked = false;
+                document.getElementById('itemList').innerHTML = '';
+                checkSaveButtonStatus();
+                renderSavedTitles();
+                document.querySelector('.form-container').style.display = 'none';
+                document.querySelector('.saved-titles').style.display = 'block';
+                document.getElementById('addTitleButton').classList.remove('hidden');
+                document.body.style.backgroundColor = '#f9f9f9'; // Reseta a cor de fundo
+            }
+        }
+
+		function fechaForm(){
+				  document.querySelector('.form-container').style.display = 'none';
+                document.querySelector('.saved-titles').style.display = 'block';
+                document.getElementById('addTitleButton').classList.remove('hidden');
+                document.body.style.backgroundColor = '#f9f9f9'; // Reseta a cor de fundo
+		}
+
+        // Função para verificar o status do botão de salvar
+        function checkSaveButtonStatus() {
+            const title = document.getElementById('title').value.trim();
+            const itemList = document.getElementById('itemList');
+            const items = itemList.getElementsByTagName('li');
+            const saveButton = document.getElementById('saveButton');
+            saveButton.disabled = !title || items.length === 0;
+        }
+
+        // Função para renderizar os títulos salvos
+        function renderSavedTitles() {
+            const savedTitlesList = document.getElementById('savedTitlesList');
+            savedTitlesList.innerHTML = '';
+            const savedTitles = JSON.parse(localStorage.getItem('savedTitles')) || [];
+
+            savedTitles.forEach((titleData, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="${titleData.completed ? 'completed-title' : ''}">${titleData.title}</span>
+                    <div style="display: flex"><button class="complete" onclick="editTitle(${index})">Editar</button>
+                    <button class="delete" onclick="deleteSavedTitle(${index})">Excluir</button></div>
+                `;
+                savedTitlesList.appendChild(li);
+            });
+        }
+
+        // Função para editar um título salvo
+        function editTitle(index) {
+            let savedTitles = JSON.parse(localStorage.getItem('savedTitles')) || [];
+            const titleData = savedTitles[index];
+
+            document.getElementById('title').value = titleData.title;
+            document.getElementById('checkbox').checked = titleData.completed;
+            document.getElementById('itemList').innerHTML = '';
+
+            titleData.items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.text;
+
+                if (item.completed) {
+                    li.style.textDecoration = 'line-through';
+                    li.setAttribute('data-completed', 'true');
+                }
+
+                const completeButton = document.createElement('button');
+                completeButton.textContent = 'Concluir';
+                completeButton.onclick = function () {
+                    const isCompleted = li.getAttribute('data-completed') === 'true';
+                    if (isCompleted) {
+                        li.style.textDecoration = '';
+                        li.removeAttribute('data-completed');
+                    } else {
+                        li.style.textDecoration = 'line-through';
+                        li.setAttribute('data-completed', 'true');
+                    }
+                    checkSaveButtonStatus();
+                };
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.onclick = function () {
+                    li.remove();
+                    checkSaveButtonStatus();
+                };
+
+                li.appendChild(completeButton);
+                li.appendChild(deleteButton);
+                document.getElementById('itemList').appendChild(li);
+            });
+
+            selectedTitleIndex = index;
+            checkSaveButtonStatus();
+            showForm(); // Mostra o formulário ao editar
+        }
+
+        // Função para excluir um título salvo
+        function deleteSavedTitle(index) {
+            let savedTitles = JSON.parse(localStorage.getItem('savedTitles')) || [];
+            savedTitles.splice(index, 1);
+            localStorage.setItem('savedTitles', JSON.stringify(savedTitles));
+            renderSavedTitles();
+        }
+
+        // Função de busca para os títulos
+        function searchTitles() {
+            const query = document.getElementById('searchTitleInput').value.toLowerCase();
+            const savedTitles = JSON.parse(localStorage.getItem('savedTitles')) || [];
+            const filteredTitles = savedTitles.filter(titleData => titleData.title.toLowerCase().includes(query));
+            const savedTitlesList = document.getElementById('savedTitlesList');
+            savedTitlesList.innerHTML = '';
+
+            filteredTitles.forEach((titleData, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="${titleData.completed ? 'completed-title' : ''}">${titleData.title}</span>
+                    <button class="complete" onclick="editTitle(${index})">Editar</button>
+                    <button class="delete" onclick="deleteSavedTitle(${index})">Excluir</button>
+                `;
+                savedTitlesList.appendChild(li);
+            });
+        }
+
+        // Função de busca para os itens
+        function searchItems() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const itemList = document.getElementById('itemList');
+            const itemsLi = itemList.getElementsByTagName('li');
+            
+            for (let i = 0; i < itemsLi.length; i++) {
+                const itemText = itemsLi[i].firstChild.textContent.toLowerCase();
+                if (itemText.includes(query)) {
+                    itemsLi[i].style.display = '';
+                } else {
+                    itemsLi[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Chama a função para renderizar os títulos salvos ao carregar a página
+        window.onload = renderSavedTitles;
+    </script>
+</body>
+</html>
